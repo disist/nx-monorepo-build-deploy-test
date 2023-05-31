@@ -9,7 +9,13 @@ const StyledLib2 = styled.div`
 `;
 
 export function Lib2(props: Lib2Props) {
-  const untestedVar = useMemo(() => 10 + 20, []);
+  const untestedVar = useMemo(() => {
+    if (Math.random() > 0.5) {
+      return 1 + 2;
+    } else {
+      return 10 + 20;
+    }
+  }, []);
 
   return (
     <StyledLib2>
