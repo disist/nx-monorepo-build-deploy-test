@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm i
 
       # - run: npx nx format:check --base=origin/main
       # - run: npx nx affected -t lint --parallel=3 --base=origin/main
