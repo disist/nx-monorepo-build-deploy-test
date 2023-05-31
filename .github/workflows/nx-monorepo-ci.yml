@@ -9,18 +9,39 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
     steps:
       - uses: actions/checkout@v3
         with:
-          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
-      - uses: nrwl/nx-set-shas@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - run: npm ci
 
-      - run: npx nx format:check --base=origin/main
-      - run: npx nx affected -t lint --parallel=3 --base=origin/main
-      - run: npx nx affected -t test --parallel=3 --configuration=ci --base=origin/main
-      - run: npx nx affected -t build --parallel=3 --base=origin/main
+      # - run: npx nx format:check --base=origin/main
+      # - run: npx nx affected -t lint --parallel=3 --base=origin/main
+      # - run: npx nx affected -t test --parallel=3 --configuration=ci --base=origin/main --coverage --coverageReporters=json,json-summary
+      # - run: npx nx affected -t build --parallel=3 --base=origin/main
+
+      - run: 'git branch --track ${{github.base_ref}} origin/${{github.base_ref}}'
+      - run: 'git branch --track ${{github.head_ref}} origin/${{github.head_ref}}'
+      - run: npx nx format:check --base=${{ github.base_ref }} --head=${{ github.head_ref }}
+      - run: npx nx affected:lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
+      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci
+      - run: npx nx affected:build --base=${{  github.base_ref }} --head=${{ github.head_ref }}
+
+      - name: TestCoverage
+        id: testCoverage
+        uses: anuraag016/Jest-Coverage-Diff@master
+        with:
+          fullCoverageDiff: false // defaults to false, if made true whole coverage report is commented with the diff
+          runCommand: 'npx nx run-many --target=test --coverage --collectCoverage=true --coverageDirectory=./ --coverageReporters=json-summary'
+          delta: 0.5
