@@ -29,30 +29,10 @@ jobs:
         with:
           test-script: npx nx affected -t test --parallel=3 --configuration=ci --base=origin/main --coverage
 
-      - name: Download Artifact (base code coverage results)
-        uses: dawidd6/action-download-artifact@v2
-        id: restoreCodeCoverage
+      - name: TestCoverage
+        id: testCoverage
+        uses: anuraag016/Jest-Coverage-Diff@master
         with:
-          workflow: main-push.yaml
-          workflow_conclusion: success
-          branch: main
-          name: code-coverage-report
-          path: ./coverage-base
-        continue-on-error: true
-
-      - name: Comment Code Coverage on PR
-        uses: dkhunt27/nx-code-coverage@v0.3.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          coverage-folder: ./coverage
-          coverage-base-folder: ./coverage-base
-          gist-token: ${{ secrets.COVERAGE_BADGES_GIST_TOKEN }}
-          gist-id: d7e6b443a01eba615fd2a7c1215aec91
-          color: green
-          named-logo: jest
-
-      - name: Jest coverage reporter
-        uses: ziishaned/jest-reporter-action@v0.0.1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          test-command: 'npx nx affected -t test --parallel=3 --configuration=ci --base=origin/main --coverage --coverageReporters=json,json-summary'
+          fullCoverageDiff: false // defaults to false, if made true whole coverage report is commented with the diff
+          runCommand: 'npx nx affected -t test --parallel=3 --configuration=ci --base=origin/main --coverage --coverageReporters=json,json-summary'
+          delta: 0.5
