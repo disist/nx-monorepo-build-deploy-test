@@ -2,28 +2,25 @@ name: NX monorepo CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [16.x]
-
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v3
+      - run: npm ci
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npx nx affected:lint
-    - run: npx nx format:check
-    - run: npx nx run-many --target=build
-    - run: npx nx run-many --target=test --coverage
+      - run: npx nx format:check --base=origin/main
+      - run: npx nx affected -t lint --parallel=3 --base=origin/main
+      - run: npx nx affected -t test --parallel=3 --configuration=ci --base=origin/main
+      - run: npx nx affected -t build --parallel=3 --base=origin/main
