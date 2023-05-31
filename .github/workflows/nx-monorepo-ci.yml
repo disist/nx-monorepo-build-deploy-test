@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: ['main']
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,7 +43,9 @@ jobs:
       url: ${{ steps.build-publish.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - run: npm ci
+      # - name: install deps
+      #   run: npm ci
+
       - id: build-publish
         uses: bitovi/github-actions-react-to-ghp@v1.2.0
         with:
