@@ -9,7 +9,7 @@ const StyledLib2 = styled.div`
 `;
 
 export function Lib2(props: Lib2Props) {
-  const untestedVar = useMemo(() => 1 + 2, []);
+  const untestedVar = useMemo(() => 10 + 20, []);
 
   return (
     <StyledLib2>
