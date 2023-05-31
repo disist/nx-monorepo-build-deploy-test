@@ -38,10 +38,14 @@ jobs:
       - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci
       - run: npx nx affected:build --base=${{  github.base_ref }} --head=${{ github.head_ref }}
 
-      - name: TestCoverage
-        id: testCoverage
-        uses: anuraag016/Jest-Coverage-Diff@master
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.build-publish.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: build-publish
+        uses: bitovi/github-actions-react-to-ghp@v1.2.0
         with:
-          fullCoverageDiff: false // defaults to false, if made true whole coverage report is commented with the diff
-          runCommand: 'npx nx run-many --target=test --coverage --collectCoverage=true --coverageDirectory=./ --coverageReporters=json-summary'
-          delta: 0.5
+          path: dist/storybook/app1
+          build_command: npx nx run app1:build-storybook
