@@ -22,6 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: git branch --track main origin/main
     - run: npm ci
     
     - run: npx nx format:check
