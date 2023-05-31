@@ -35,20 +35,11 @@ jobs:
       - run: 'git branch --track ${{github.head_ref}} origin/${{github.head_ref}}'
       - run: npx nx format:check --base=${{ github.base_ref }} --head=${{ github.head_ref }}
       - run: npx nx affected:lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
-      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci --coverage --coverageReporters=json-summary --coverageDirectory=./coverage
+      # - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci --coverage
+      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci --coverage --verbose --coverageReporters=text | tee ./coverage.txt && exit ${PIPESTATUS[0]}
       - run: npx nx affected:build --base=${{  github.base_ref }} --head=${{ github.head_ref }}
 
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
         with:
-          multiple-files: |
-            My-Title-1, ./coverage_1/coverage-summary.json
-            My-Title-2, ./coverage_2/coverage-summary.json
-
-      - name: TestCoverage
-        id: testCoverage
-        uses: anuraag016/Jest-Coverage-Diff@master
-        with:
-          fullCoverageDiff: false // defaults to false, if made true whole coverage report is commented with the diff
-          runCommand: 'npx nx run-many --target=test --coverage --collectCoverage=true --coverageDirectory=./coverage --coverageReporters=json-summary && cp ./coverage/coverage-summary.json ./'
-          delta: 0.5
+          coverage-path: ./coverage.txt

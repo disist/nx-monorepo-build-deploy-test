@@ -39,3 +39,4 @@ testem.log
 Thumbs.db
 
 coverage-summary.json
+coverage.txt
