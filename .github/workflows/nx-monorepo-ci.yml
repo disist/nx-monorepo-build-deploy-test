@@ -47,13 +47,6 @@ jobs:
           color: green
           named-logo: jest
 
-      - name: Monitor coverage
-        if: ! contains(github.event.pull_request.user.login, 'dependabot[bot]')
-        uses: slavcodev/coverage-monitor-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          coverage_path: 'logs/clover.xml'
-
       - name: Jest coverage reporter
         uses: ziishaned/jest-reporter-action@v0.0.1
         with:
