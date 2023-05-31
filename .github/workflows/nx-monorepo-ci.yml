@@ -24,3 +24,25 @@ jobs:
       - run: npx nx affected -t lint --parallel=3 --base=origin/main
       - run: npx nx affected -t test --parallel=3 --configuration=ci --base=origin/main
       - run: npx nx affected -t build --parallel=3 --base=origin/main
+
+      - name: Download Artifact (base code coverage results)
+        uses: dawidd6/action-download-artifact@v2
+        id: restoreCodeCoverage
+        with:
+          workflow: main-push.yaml
+          workflow_conclusion: success
+          branch: main
+          name: code-coverage-report
+          path: ./coverage-base
+        continue-on-error: true
+
+      - name: Comment Code Coverage on PR
+        uses: dkhunt27/nx-code-coverage@v0.3.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          coverage-folder: ./coverage
+          coverage-base-folder: ./coverage-base
+          gist-token: ${{ secrets.COVERAGE_BADGES_GIST_TOKEN }}
+          gist-id: d7e6b443a01eba615fd2a7c1215aec91
+          color: green
+          named-logo: jest
