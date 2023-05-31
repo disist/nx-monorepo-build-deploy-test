@@ -35,7 +35,7 @@ jobs:
       - run: 'git branch --track ${{github.head_ref}} origin/${{github.head_ref}}'
       - run: npx nx format:check --base=${{ github.base_ref }} --head=${{ github.head_ref }}
       - run: npx nx affected:lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
-      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci --coverage --coverageReporters=json,json-summary
+      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci --coverage --coverageReporters=json,json-summary --coverageDirectory=./coverage
       - run: npx nx affected:build --base=${{  github.base_ref }} --head=${{ github.head_ref }}
 
       # - name: TestCoverage
