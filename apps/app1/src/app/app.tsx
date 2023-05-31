@@ -11,7 +11,7 @@ const StyledApp = styled.div`
 export function App() {
   return (
     <StyledApp>
-      {/* <NxWelcome title="app1" /> */}
+      <NxWelcome title="app1" />
       <Lib1 />
       <Lib2 />
     </StyledApp>
