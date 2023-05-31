@@ -30,5 +30,5 @@ jobs:
         uses: anuraag016/Jest-Coverage-Diff@master
         with:
           fullCoverageDiff: false // defaults to false, if made true whole coverage report is commented with the diff
-          runCommand: 'npx nx affected -t test --parallel=3 --configuration=ci --base=origin/main --coverage --coverageReporters=json,json-summary'
+          runCommand: 'npx nx affected -t test --parallel=3 --configuration=ci --base=origin/main --collectCoverageFrom=''["src/**/*.{js,jsx,ts,tsx}"]'' --coverage --collectCoverage=true --coverageDirectory=''./'' --coverageReporters=''json-summary'' --forceExit'
           delta: 0.5
