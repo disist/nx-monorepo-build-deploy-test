@@ -41,12 +41,19 @@ jobs:
 
       - run: node merge-coverage-json.js
 
+      # Hack
+      - run: mv coverage/coverage-summary.json coverage-summary.json
+
+      - run: npx nyc report --reporter text -t coverage > ./coverage/coverage.txt
+
+      - run: cat ./coverage/coverage.txt
+
       - name: Jest Coverage Comment
         id: coverageComment
         uses: MishaKav/jest-coverage-comment@main
         with:
-          hide-comment: true
-          coverage-summary-path: ./coverage/coverage-summary.json
+          coverage-summary-path: ./coverage-summary.json
+          coverage-path: ./coverage/coverage.txt
 
   deploy:
     environment:
