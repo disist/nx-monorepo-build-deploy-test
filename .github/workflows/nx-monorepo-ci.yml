@@ -43,6 +43,8 @@ jobs:
 
       - run: npx istanbul report --include coverage/coverage-final.json text > ./coverage/coverage.txt
 
+      - run: cat ./coverage/coverage.txt
+
       - name: Jest Coverage Comment
         id: coverageComment
         uses: MishaKav/jest-coverage-comment@main
