@@ -34,13 +34,22 @@ jobs:
       - run: 'git branch --track ${{github.head_ref}} origin/${{github.head_ref}}'
       - run: npx nx format:check --base=${{ github.base_ref }} --head=${{ github.head_ref }}
       - run: npx nx affected:lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
-      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci
+      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci --coverage --coverageReporters=json,json-summary
       - run: npx nx affected:build --base=${{  github.base_ref }} --head=${{ github.head_ref }}
 
       - uses: actions/upload-artifact@v3
         with:
           name: coverage-report
           path: coverage
+
+      - run: node merge-coverage-json.js
+
+      - name: Jest Coverage Comment
+        id: coverageComment
+        uses: MishaKav/jest-coverage-comment@main
+        with:
+          hide-comment: true
+          coverage-summary-path: ./coverage/coverage-summary.json
 
   deploy:
     environment:
