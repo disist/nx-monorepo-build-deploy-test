@@ -6,14 +6,11 @@ on:
   pull_request:
     branches: ['main']
 
+permissions: write-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
@@ -23,7 +20,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
       - run: npm ci
 
       # - run: npx nx format:check --base=origin/main
@@ -35,13 +31,34 @@ jobs:
       - run: 'git branch --track ${{github.head_ref}} origin/${{github.head_ref}}'
       - run: npx nx format:check --base=${{ github.base_ref }} --head=${{ github.head_ref }}
       - run: npx nx affected:lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
-      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci
+      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci --coverage --coverageReporters=json,json-summary
       - run: npx nx affected:build --base=${{  github.base_ref }} --head=${{ github.head_ref }}
 
-      - name: TestCoverage
-        id: testCoverage
-        uses: anuraag016/Jest-Coverage-Diff@master
+      - uses: actions/upload-artifact@v3
         with:
-          fullCoverageDiff: false // defaults to false, if made true whole coverage report is commented with the diff
-          runCommand: 'npx nx run-many --target=test --coverage --collectCoverage=true --coverageDirectory=./ --coverageReporters=json-summary'
-          delta: 0.5
+          name: coverage-report
+          path: coverage
+
+      - run: node merge-coverage-json.js
+
+      - name: Jest Coverage Comment
+        id: coverageComment
+        uses: MishaKav/jest-coverage-comment@main
+        with:
+          hide-comment: true
+          coverage-summary-path: ./coverage/coverage-summary.json
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.build-publish.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      # - name: install deps
+      #   run: npm ci
+
+      - id: build-publish
+        uses: bitovi/github-actions-react-to-ghp@v1.2.0
+        with:
+          path: dist/storybook/app1
+          build_command: npx nx run app1:build-storybook
