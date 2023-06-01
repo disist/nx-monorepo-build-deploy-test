@@ -45,7 +45,6 @@ jobs:
         id: coverageComment
         uses: MishaKav/jest-coverage-comment@main
         with:
-          hide-comment: true
           coverage-summary-path: ./coverage/coverage-summary.json
 
   deploy:
