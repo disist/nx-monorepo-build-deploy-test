@@ -41,11 +41,14 @@ jobs:
 
       - run: node merge-coverage-json.js
 
+      - run: npx istanbul report --include coverage/coverage-final.json text > ./coverage/coverage.txt
+
       - name: Jest Coverage Comment
         id: coverageComment
         uses: MishaKav/jest-coverage-comment@main
         with:
           coverage-summary-path: ./coverage/coverage-summary.json
+          coverage-path: ./coverage/coverage.txt
 
   deploy:
     environment:
