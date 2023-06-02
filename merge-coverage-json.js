@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { exec } = require('child_process');
 const coverageFolder = './coverage/apps/';
 
 const appNames = fs.readdirSync(coverageFolder);
@@ -17,8 +18,10 @@ const appNames = fs.readdirSync(coverageFolder);
   );
 });
 
-process.env.testCoverageJsonFiles = appNames.map((appName) => {
+const testCoverageJsonFiles = appNames.map((appName) => {
   return `${appName}, ${coverageFolder}${appName}/coverage-summary.json`;
 });
 
-console.log('>> ', process.env.testCoverageJsonFiles);
+console.log('>> ', testCoverageJsonFiles);
+
+exec(`echo "testCoverageJsonFiles=${testCoverageJsonFiles}" >> $GITHUB_ENV`);
