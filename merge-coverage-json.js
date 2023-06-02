@@ -1,7 +1,7 @@
-const coverageFolder = './coverage/apps/';
 const fs = require('fs');
 
 const appNames = [];
+const coverageFolder = './coverage/apps/';
 
 [('coverage-summary.json', 'coverage-final.json')].forEach((coverageFile) => {
   let agregatedCoverage = {};
@@ -11,7 +11,7 @@ const appNames = [];
     appNames.push(appName);
   });
 
-  // console.log(JSON.stringify(agregatedCoverage, null, 2));
+  console.log('>> saving', `./coverage/${coverageFile}`);
   fs.writeFileSync(
     `./coverage/${coverageFile}`,
     JSON.stringify(agregatedCoverage)
