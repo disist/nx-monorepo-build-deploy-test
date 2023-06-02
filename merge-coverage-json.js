@@ -22,10 +22,10 @@ const testCoverageJsonFiles = appNames.map((appName) => {
   return `${appName}, ${coverageFolder}${appName}/coverage-summary.json`;
 });
 
-console.log('>> ', testCoverageJsonFiles.join('|'));
+console.log('>> ', JSON.stringify(testCoverageJsonFiles));
 
 exec(
-  `echo "testCoverageJsonFiles=${testCoverageJsonFiles.join(
-    '|'
+  `echo "testCoverageJsonFiles=${JSON.stringify(
+    testCoverageJsonFiles
   )}" >> $GITHUB_ENV`
 );
