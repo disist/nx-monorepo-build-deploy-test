@@ -31,7 +31,7 @@ jobs:
       - run: 'git branch --track ${{github.head_ref}} origin/${{github.head_ref}}'
       - run: npx nx format:check --base=${{ github.base_ref }} --head=${{ github.head_ref }}
       - run: npx nx affected:lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
-      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci --coverage --coverageReporters=json,json-summary
+      - run: npx nx affected:test --base=${{  github.base_ref }} --head=${{ github.head_ref }} --configuration=ci --coverage --coverageReporters=json,json-summary,lcov
       - run: npx nx affected:build --base=${{  github.base_ref }} --head=${{ github.head_ref }}
 
       - uses: actions/upload-artifact@v3
@@ -52,7 +52,8 @@ jobs:
         id: coverageComment
         uses: MishaKav/jest-coverage-comment@main
         with:
-          coverage-summary-path: ./coverage-summary.json
+          # coverage-summary-path: ./coverage-summary.json
+          multiple-files: $testCoverageJsonFiles
           coverage-path: ./coverage/coverage.txt
 
   deploy:
