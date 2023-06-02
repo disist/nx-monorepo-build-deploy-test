@@ -26,4 +26,6 @@ const testCoverageJsonFiles = appNames
 
 console.log('>> ', testCoverageJsonFiles);
 
+exec(` echo "testCoverageJsonFiles<<EOF" >> $GITHUB_ENV`);
 exec(`echo "testCoverageJsonFiles=${testCoverageJsonFiles}" >> $GITHUB_ENV`);
+exec(`echo "EOF" >> $GITHUB_ENV`);
