@@ -53,7 +53,10 @@ jobs:
         uses: MishaKav/jest-coverage-comment@main
         with:
           # coverage-summary-path: ./coverage-summary.json
-          multiple-files: ${{ env.testCoverageJsonFiles }}
+          # multiple-files: ${{ env.testCoverageJsonFiles }}
+          multiple-files: |
+            app1, ./coverage/apps/app1/coverage-summary.json
+            app2, ./coverage/apps/app2/coverage-summary.json
           coverage-path: ./coverage/coverage.txt
 
   deploy:
