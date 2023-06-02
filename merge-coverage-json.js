@@ -17,8 +17,8 @@ const appNames = fs.readdirSync(coverageFolder);
   );
 });
 
-process.env.testCoverageJsonFiles = appNames.reduce((result, appName) => {
-  return `${result}\n${appName}, ${coverageFolder}${appName}/coverage-summary.json`;
-}, '|');
+process.env.testCoverageJsonFiles = appNames.map((appName) => {
+  return `${appName}, ${coverageFolder}${appName}/coverage-summary.json`;
+});
 
 console.log('>> ', process.env.testCoverageJsonFiles);
