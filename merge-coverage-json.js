@@ -19,9 +19,13 @@ const appNames = fs.readdirSync(coverageFolder);
 });
 
 const testCoverageJsonFiles = appNames.map((appName) => {
-  return `\n ${appName}, ${coverageFolder}${appName}/coverage-summary.json`;
+  return `${appName}, ${coverageFolder}${appName}/coverage-summary.json`;
 });
 
-console.log('>> ', testCoverageJsonFiles.toString());
+console.log('>> ', testCoverageJsonFiles.join('|'));
 
-exec(`echo "testCoverageJsonFiles=${testCoverageJsonFiles}" >> $GITHUB_ENV`);
+exec(
+  `echo "testCoverageJsonFiles=${testCoverageJsonFiles.join(
+    '|'
+  )}" >> $GITHUB_ENV`
+);
