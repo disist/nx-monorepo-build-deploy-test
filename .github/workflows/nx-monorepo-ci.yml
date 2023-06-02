@@ -42,7 +42,7 @@ jobs:
       - run: node merge-coverage-json.js
 
       # Hack
-      # - run: mv coverage/coverage-summary.json coverage-summary.json
+      - run: mv coverage/coverage-summary.json coverage-summary.json
 
       - run: npx nyc report --reporter text -t coverage > ./coverage/coverage.txt
 
@@ -53,7 +53,7 @@ jobs:
         uses: MishaKav/jest-coverage-comment@main
         with:
           # coverage-summary-path: ./coverage-summary.json
-          multiple-files: $testCoverageJsonFiles
+          multiple-files: ${{ env.testCoverageJsonFiles }}
           coverage-path: ./coverage/coverage.txt
 
   deploy:
