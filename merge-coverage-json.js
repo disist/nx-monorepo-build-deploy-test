@@ -3,12 +3,11 @@ const coverageFolder = './coverage/apps/';
 
 const appNames = fs.readdirSync(coverageFolder);
 
-appNames.forEach((coverageFile) => {
+['coverage-summary.json', 'coverage-final.json'].forEach((coverageFile) => {
   let agregatedCoverage = {};
-  fs.readdirSync(coverageFolder).forEach((appName) => {
+  appNames.forEach((appName) => {
     const appCoverage = require(`${coverageFolder}${appName}/${coverageFile}`);
     agregatedCoverage = { ...agregatedCoverage, ...appCoverage };
-    appNames.push(appName);
   });
 
   console.log('>> saving', `./coverage/${coverageFile}`);
