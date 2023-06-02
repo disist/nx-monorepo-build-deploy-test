@@ -1,9 +1,9 @@
 const fs = require('fs');
-
-const appNames = [];
 const coverageFolder = './coverage/apps/';
 
-['coverage-summary.json', 'coverage-final.json'].forEach((coverageFile) => {
+const appNames = fs.readdirSync(coverageFolder);
+
+appNames.forEach((coverageFile) => {
   let agregatedCoverage = {};
   fs.readdirSync(coverageFolder).forEach((appName) => {
     const appCoverage = require(`${coverageFolder}${appName}/${coverageFile}`);
@@ -20,6 +20,6 @@ const coverageFolder = './coverage/apps/';
 
 process.env.testCoverageJsonFiles = appNames.reduce((result, appName) => {
   return `${result}\n${appName}, ${coverageFolder}${appName}/coverage-summary.json`;
-}, '');
+}, '|');
 
 console.log('>> ', process.env.testCoverageJsonFiles);
