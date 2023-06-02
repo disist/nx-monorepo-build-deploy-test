@@ -18,14 +18,12 @@ const appNames = fs.readdirSync(coverageFolder);
   );
 });
 
-const testCoverageJsonFiles = appNames.map((appName) => {
-  return `${appName}, ${coverageFolder}${appName}/coverage-summary.json`;
-});
+const testCoverageJsonFiles = appNames
+  .map((appName) => {
+    return `${appName}, ${coverageFolder}${appName}/coverage-summary.json`;
+  })
+  .join('\n');
 
-console.log('>> ', JSON.stringify(testCoverageJsonFiles));
+console.log('>> ', testCoverageJsonFiles);
 
-exec(
-  `echo "testCoverageJsonFiles=${JSON.stringify(
-    testCoverageJsonFiles
-  )}" >> $GITHUB_ENV`
-);
+exec(`echo "testCoverageJsonFiles=${testCoverageJsonFiles}" >> $GITHUB_ENV`);
