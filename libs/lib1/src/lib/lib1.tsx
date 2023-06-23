@@ -19,10 +19,19 @@ export function Lib1(props: Lib1Props) {
     return 2000;
   }, [props.someVariable]);
 
+  const additionalUntestedConditionalValue = useMemo(() => {
+    if (props.someVariable) {
+      return 12345;
+    }
+
+    return 23456;
+  }, [props.someVariable]);
+
   return (
     <StyledLib1>
       <h1>Welcome to Lib1!</h1>
       <div>{anyConditionalValue}</div>
+      <div>{additionalUntestedConditionalValue}</div>
     </StyledLib1>
   );
 }
