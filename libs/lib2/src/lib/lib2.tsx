@@ -5,7 +5,7 @@ import styled from 'styled-components';
 export interface Lib2Props {}
 
 const StyledLib2 = styled.div`
-  color: pink;
+  color: red;
 `;
 
 export function Lib2(props: Lib2Props) {
