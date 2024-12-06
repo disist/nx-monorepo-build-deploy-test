@@ -60,6 +60,11 @@ jobs:
   no_reruns:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch the entire repository history, including all commit information
+
       - name: Fetch latest commit hash
         run: |
           # Fetch the latest commit hash from the default branch
@@ -79,7 +84,6 @@ jobs:
             fi
           else
             echo "This is the first run. Proceeding."
-          fi
 
   deploy:
     environment:
