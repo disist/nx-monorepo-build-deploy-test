@@ -59,7 +59,6 @@ jobs:
 
   no_reruns:
     runs-on: ubuntu-latest
-    if: always()
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -67,6 +66,7 @@ jobs:
           fetch-depth: 0  # Fetch the entire repository history, including all commit information
 
       - name: Fetch latest commit hash
+        if: always()
         run: |
           # Fetch the latest commit hash from the default branch
           LATEST_COMMIT=$(git ls-remote origin HEAD | awk '{print $1}')
