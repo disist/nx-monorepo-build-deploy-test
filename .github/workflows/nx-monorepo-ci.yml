@@ -84,6 +84,7 @@ jobs:
             fi
           else
             echo "This is the first run. Proceeding."
+          fi
 
   deploy:
     environment:
