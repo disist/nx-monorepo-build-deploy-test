@@ -57,6 +57,30 @@ jobs:
           coverage-summary-path: ./coverage-summary.json
           coverage-path: ./coverage/coverage.txt
 
+  no_reruns:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch latest commit hash
+        run: |
+          # Fetch the latest commit hash from the default branch
+          LATEST_COMMIT=$(git ls-remote origin HEAD | awk '{print $1}')
+          CURRENT_COMMIT=$(git rev-parse HEAD)
+
+          echo "Latest commit: $LATEST_COMMIT"
+          echo "Current commit: $CURRENT_COMMIT"
+
+          # Check if this is a re-run
+          if [ "$GITHUB_RUN_ATTEMPT" -gt 1 ]; then
+            if [ "$CURRENT_COMMIT" != "$LATEST_COMMIT" ]; then
+              echo "Re-runs are not allowed on older commits. Aborting."
+              exit 1
+            else
+              echo "Re-run allowed for the latest commit."
+            fi
+          else
+            echo "This is the first run. Proceeding."
+          fi
+
   deploy:
     environment:
       name: github-pages
